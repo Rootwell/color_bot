@@ -1,0 +1,24 @@
+{
+  "name": "vendor_name/php-getting-started",
+  "description": "description",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "gdami",
+      "email": "email@example.com"
+    }
+  ],
+  "require": {
+    "ext-json": "*",
+    "ext-curl": "*",
+    "ext-gd": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "ColorThief\\Image\\Adapter\\": "src/ColorThief/Image/Adapter",
+      "ColorThief\\Image\\": "src/ColorThief/Image",
+      "ColorThief\\":"src/ColorThief"
+    }
+  }
+}

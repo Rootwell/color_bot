@@ -7,17 +7,20 @@ use ColorThief\ColorThief;
 //константы для удобства
 define('TOKEN', '1639862093:AAHTXIlR___Q98_YmZwrE9dad73Squb3jw0');
 define('TG_BOT_API_URL', 'https://api.telegram.org/bot');
-define('HOST_URL', 'ССЫЛКА ПОЛУЧЕННАЯ ОТ ngrok');
+define('HOST_URL', 'https://d4b1f0bbaee0.ngrok.io');
 define('RESULT_CIRCLE_DIAMETR', 80);
 define('RESULT_CIRCLE_INTERVAL', 10);
 
 //получаем данные из входного потока в этот файл (в него попадает то, что отправляется боту)
 $data = json_decode(file_get_contents('php://input'), TRUE);
+file_put_contents('file.txt', print_r($data, true) . "\n", FILE_APPEND);
 $chatId = $data['message']['chat']['id'];
-
+if (isset($data['message']['caption'])) {
+    $messageCaption = $data['message']['caption'];
+}
 //если пользователь отправил команду /start
-if (isset($data['message']['text']) && $data['message']['text'] === '/start') {
-    sendMessage($chatId, 'Отправь мне изображение, а я попробую определить его цветовую палитру');
+if (isset($messageText) && $messageText === '/start') {
+    sendMessage($chatId, 'Отправь мне изображение, а я попробую определить его цветовую палитру, можешь указать диапазон от 4 до 8 цветов');
     die();
 }
 
@@ -27,10 +30,16 @@ if (!isset($data['message']['photo'])) {
     die();
 }
 
+$colorsCount = 4;
+
+if (isset($messageCaption) && is_numeric($messageCaption) && $messageCaption > 4 && $messageCaption < 9) {
+    $colorsCount = $messageCaption;
+}
+
 //получаем отправленную пользователем фотографию
 $photoFromUser = getPhoto($data);
 //определяем цветовую палитру изображения (ищет 4 цвета с изображения, при желании можно указывать пользователем)
-$colors = ColorThief::getPalette($photoFromUser, 4);
+$colors = ColorThief::getPalette($photoFromUser, $colorsCount);
 //удаляем файл, который отправил нам пользователь
 unlink($photoFromUser);
 //создаём файл в котором будет изображена цветовая палитра

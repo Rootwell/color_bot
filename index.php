@@ -15,10 +15,15 @@ define('RESULT_CIRCLE_INTERVAL', 10);
 $data = json_decode(file_get_contents('php://input'), TRUE);
 file_put_contents('file.txt', print_r($data, true) . "\n", FILE_APPEND);
 $chatId = $data['message']['chat']['id'];
+//написал ли пользователь число с изображением
 if (isset($data['message']['caption'])) {
     $messageCaption = $data['message']['caption'];
 }
 //если пользователь отправил команду /start
+if (isset($data['message']['text'])) {
+    $messageText = $data['message']['text'];
+}
+
 if (isset($messageText) && $messageText === '/start') {
     sendMessage($chatId, 'Отправь мне изображение, а я попробую определить его цветовую палитру, можешь указать диапазон от 4 до 8 цветов');
     die();
